@@ -78,7 +78,6 @@
             display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer;
         }
 
-        /* ESTILO DA FOTO COM BOTÃO EXCLUIR */
         .photo-container { position: relative; width: 100%; aspect-ratio: 1; }
         .photo-container img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
         .delete-photo-btn {
@@ -95,6 +94,7 @@
         }
         #fullscreen-img { max-width: 95%; max-height: 90%; border-radius: 10px; }
 
+        /* PAINEL ADMIN COM STATUS */
         #admin-panel { 
             display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 90%; max-width: 400px; background: #1a1a1a; padding: 25px; 
@@ -103,6 +103,13 @@
         .admin-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.9); z-index: 1000000; }
         .admin-input { width: 100%; padding: 12px; margin-bottom: 15px; background: #000; color: #fff; border: 1px solid #333; border-radius: 8px; }
         
+        .status-toggle {
+            width: 100%; padding: 15px; border-radius: 10px; border: none; 
+            font-weight: 900; margin-bottom: 20px; cursor: pointer; text-transform: uppercase;
+        }
+        .btn-abrir { background: var(--led-green); color: black; }
+        .btn-fechar { background: var(--led-red); color: white; }
+
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
@@ -115,9 +122,13 @@
     <div class="admin-overlay" id="admin-overlay" onclick="closeAdmin()"></div>
     <div id="admin-panel">
         <h3 style="margin:0 0 20px 0; color:var(--primary); text-align:center;">CONTROLE RDG</h3>
+        
+        <button id="toggle-shop-btn" class="status-toggle" onclick="toggleShopStatus()">Carregando...</button>
+
         <input type="number" id="input-social" class="admin-input" placeholder="Preço Social">
         <input type="number" id="input-degrade" class="admin-input" placeholder="Preço Degradê">
-        <button onclick="updatePrices()" style="width:100%; padding:15px; background:var(--primary); color:white; border:none; border-radius:10px; font-weight:bold; cursor:pointer;">SALVAR</button>
+        
+        <button onclick="updatePrices()" style="width:100%; padding:15px; background:var(--primary); color:white; border:none; border-radius:10px; font-weight:bold; cursor:pointer;">SALVAR PREÇOS</button>
         <button onclick="closeAdmin()" style="width:100%; padding:10px; background:none; color:#555; border:none; margin-top:10px; cursor:pointer;">Fechar</button>
     </div>
 
@@ -173,6 +184,8 @@
         const myId = localStorage.getItem('rdg_user_id') || ('u' + Math.random().toString(36).substr(2, 7));
         localStorage.setItem('rdg_user_id', myId);
 
+        let currentShopStatus = false;
+
         function openFullscreen(src) { document.getElementById('fullscreen-img').src = src; document.getElementById('fullscreen-viewer').style.display = 'flex'; }
         function closeFullscreen() { document.getElementById('fullscreen-viewer').style.display = 'none'; }
         
@@ -183,7 +196,11 @@
             database.ref('precos').set({
                 social: document.getElementById('input-social').value,
                 degrade: document.getElementById('input-degrade').value
-            }).then(() => { alert("Atualizado!"); closeAdmin(); });
+            }).then(() => { alert("Preços salvos!"); closeAdmin(); });
+        }
+
+        function toggleShopStatus() {
+            database.ref('status_loja').set(!currentShopStatus);
         }
 
         function openTab(evt, tabName) {
@@ -203,19 +220,15 @@
                 snapshot.forEach((child) => {
                     const photoId = child.key;
                     const photoData = child.val();
-
                     const container = document.createElement('div');
                     container.className = 'photo-container';
-
                     const img = document.createElement('img');
                     img.src = photoData.image;
                     img.onclick = () => openFullscreen(img.src);
-
                     const delBtn = document.createElement('button');
                     delBtn.className = 'delete-photo-btn';
                     delBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
                     delBtn.onclick = () => deletePhoto(photoId);
-
                     container.appendChild(img);
                     container.appendChild(delBtn);
                     display.prepend(container);
@@ -224,9 +237,7 @@
         }
 
         function deletePhoto(id) {
-            if(confirm("Deseja excluir esta foto da sua nuvem?")) {
-                database.ref('usuarios/' + myId + '/fotos/' + id).remove();
-            }
+            if(confirm("Excluir foto?")) database.ref('usuarios/' + myId + '/fotos/' + id).remove();
         }
 
         document.getElementById('upload-input').onchange = function(e) {
@@ -239,10 +250,24 @@
             reader.readAsDataURL(file);
         };
 
+        // ESCUTA O STATUS DA LOJA
         database.ref('status_loja').on('value', (s) => {
-            const isA = s.val();
-            document.getElementById('shop-status').className = isA ? "status-panel status-aberto" : "status-panel status-fechado";
-            document.getElementById('status-label').innerText = isA ? "BARBEARIA RDG ABERTA" : "BARBEARIA RDG FECHADA";
+            currentShopStatus = s.val();
+            const btn = document.getElementById('toggle-shop-btn');
+            const panel = document.getElementById('shop-status');
+            const label = document.getElementById('status-label');
+
+            if(currentShopStatus) {
+                panel.className = "status-panel status-aberto";
+                label.innerText = "BARBEARIA RDG ABERTA";
+                btn.innerText = "FECHAR BARBEARIA";
+                btn.className = "status-toggle btn-fechar";
+            } else {
+                panel.className = "status-panel status-fechado";
+                label.innerText = "BARBEARIA RDG FECHADA";
+                btn.innerText = "ABRIR BARBEARIA";
+                btn.className = "status-toggle btn-abrir";
+            }
         });
 
         database.ref('precos').on('value', (s) => {
