@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RDG 2026 | Estilo e Tradição</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+    <style>
+        :root {
+            --primary: #e61e1e; 
+            --dark-bg: #0a0a0a;
+            --card-bg: #1a1a1a;
+            --led-green: #2ecc71;
+            --led-red: #e74c3c;
+            --whatsapp: #25d366;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--dark-bg); color: white; overflow-x: hidden; padding-bottom: 120px; }
+
+        header { 
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 4%; border-bottom: 3px solid var(--primary); 
+            background: #111; height: 90px;
+        }
+        
+        .logo-rdg { font-size: 1.6rem; font-weight: 900; font-style: italic; display: flex; align-items: center; gap: 8px; }
+        .dev-gear { color: #444; cursor: pointer; font-size: 1.1rem; }
+
+        .header-profile-img {
+            width: 50px; height: 50px; border-radius: 50%; 
+            border: 2px solid var(--primary); cursor: pointer; object-fit: cover;
+        }
+
+        .status-panel { 
+            display: flex; flex-direction: column; align-items: center; 
+            background: rgba(0,0,0,0.5); padding: 8px 12px; border-radius: 12px; 
+            border: 1px solid #222; min-width: 140px;
+        }
+        .status-text { font-size: 0.6rem; font-weight: 900; margin-bottom: 4px; text-align: center; }
+        .led { width: 10px; height: 10px; border-radius: 50%; }
+        
+        .status-aberto .led { background: var(--led-green); box-shadow: 0 0 12px var(--led-green); animation: pulse-led 1.5s infinite; }
+        .status-aberto .status-text { color: var(--led-green); }
+        .status-fechado .led { background: var(--led-red); }
+
+        @keyframes pulse-led { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        .tabs { display: flex; background: #000; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid #222; }
+        .tab-btn { flex: 1; padding: 18px; border: none; background: none; color: #555; font-weight: bold; font-size: 0.8rem; cursor: pointer; }
+        .tab-btn.active { color: var(--primary); border-bottom: 3px solid var(--primary); }
+
+        .whatsapp-fixed {
+            position: fixed; bottom: 90px; right: 20px;
+            background-color: var(--whatsapp); color: white;
+            width: 60px; height: 60px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.8); z-index: 999999;
+            text-decoration: none;
+        }
+
+        .main-logo-container { width: 100%; display: flex; justify-content: center; padding: 25px 0 10px 0; }
+        .main-logo-img { max-width: 200px; height: auto; }
+
+        .content-section { display: none; padding: 10px 20px; animation: fadeIn 0.3s; }
+        .content-section.active { display: block; }
+
+        .price-card { background: var(--card-bg); padding: 18px; border-radius: 10px; margin-bottom: 12px; display: flex; justify-content: space-between; border-left: 5px solid var(--primary); align-items: center; }
+        .price-value { color: var(--primary); font-weight: 800; font-size: 1.2rem; }
+
+        .upload-btn {
+            background: var(--primary); color: white; border: none; padding: 15px; 
+            border-radius: 10px; font-weight: bold; width: 100%; margin-bottom: 20px;
+            display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer;
+        }
+
+        /* ESTILO DA FOTO COM BOTÃO EXCLUIR */
+        .photo-container { position: relative; width: 100%; aspect-ratio: 1; }
+        .photo-container img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+        .delete-photo-btn {
+            position: absolute; top: 5px; right: 5px;
+            background: rgba(230, 30, 30, 0.9); color: white;
+            border: none; border-radius: 50%; width: 28px; height: 28px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; cursor: pointer; z-index: 10;
+        }
+
+        #fullscreen-viewer {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.98); z-index: 2000000; justify-content: center; align-items: center;
+        }
+        #fullscreen-img { max-width: 95%; max-height: 90%; border-radius: 10px; }
+
+        #admin-panel { 
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 90%; max-width: 400px; background: #1a1a1a; padding: 25px; 
+            border-radius: 20px; border: 2px solid var(--primary); z-index: 1000001;
+        }
+        .admin-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.9); z-index: 1000000; }
+        .admin-input { width: 100%; padding: 12px; margin-bottom: 15px; background: #000; color: #fff; border: 1px solid #333; border-radius: 8px; }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div id="fullscreen-viewer" onclick="closeFullscreen()">
+        <img id="fullscreen-img" src="">
+    </div>
+
+    <div class="admin-overlay" id="admin-overlay" onclick="closeAdmin()"></div>
+    <div id="admin-panel">
+        <h3 style="margin:0 0 20px 0; color:var(--primary); text-align:center;">CONTROLE RDG</h3>
+        <input type="number" id="input-social" class="admin-input" placeholder="Preço Social">
+        <input type="number" id="input-degrade" class="admin-input" placeholder="Preço Degradê">
+        <button onclick="updatePrices()" style="width:100%; padding:15px; background:var(--primary); color:white; border:none; border-radius:10px; font-weight:bold; cursor:pointer;">SALVAR</button>
+        <button onclick="closeAdmin()" style="width:100%; padding:10px; background:none; color:#555; border:none; margin-top:10px; cursor:pointer;">Fechar</button>
+    </div>
+
+    <header>
+        <div class="header-left">
+            <span style="color:var(--primary); font-size:0.7rem; font-weight:bold;">2026</span>
+            <div class="logo-rdg">RDG <i class="fas fa-cog dev-gear" onclick="openAdmin()"></i></div>
+        </div>
+        <div id="shop-status" class="status-panel">
+            <span class="status-text" id="status-label">CARREGANDO...</span>
+            <div class="led"></div>
+        </div>
+        <img src="https://i.ibb.co/HpPNnqqc/97a8aeeeeff0f0cffea0265f5fcfe2f41ac511f755c6b0d03d884867738a6947.jpg" 
+             class="header-profile-img" onclick="openFullscreen(this.src)">
+    </header>
+
+    <a href="https://api.whatsapp.com/send?phone=5588988088578" class="whatsapp-fixed" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <nav class="tabs">
+        <button class="tab-btn active" onclick="openTab(event, 'precos')">TABELA</button>
+        <button class="tab-btn" onclick="openTab(event, 'galeria')">MINHA NUVEM</button>
+    </nav>
+
+    <div class="main-logo-container">
+        <img src="https://i.supaimg.com/6ce5a4d0-a717-4695-8947-6df309d71c4a/93281898-889c-402e-b747-4bb5c11bdc20.png" class="main-logo-img">
+    </div>
+
+    <section id="precos" class="content-section active">
+        <div class="price-card">
+            <div><strong>Corte Social</strong></div>
+            <div class="price-value" id="val-social">R$ --</div>
+        </div>
+        <div class="price-card">
+            <div><strong>Corte Degradê</strong></div>
+            <div class="price-value" id="val-degrade">R$ --</div>
+        </div>
+    </section>
+
+    <section id="galeria" class="content-section">
+        <input type="file" id="upload-input" accept="image/*" style="display: none;">
+        <button class="upload-btn" onclick="document.getElementById('upload-input').click()">
+            <i class="fas fa-cloud-upload-alt"></i> ADICIONAR FOTO NA NUVEM
+        </button>
+        <div id="gallery-display" style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"></div>
+    </section>
+
+    <script>
+        const firebaseConfig = { apiKey: "AIzak4N87EPBGvSByz6amrylTnV0wzbZ8CfZAlj", databaseURL: "https://netbase-cloud-default-rtdb.firebaseio.com/" };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const myId = localStorage.getItem('rdg_user_id') || ('u' + Math.random().toString(36).substr(2, 7));
+        localStorage.setItem('rdg_user_id', myId);
+
+        function openFullscreen(src) { document.getElementById('fullscreen-img').src = src; document.getElementById('fullscreen-viewer').style.display = 'flex'; }
+        function closeFullscreen() { document.getElementById('fullscreen-viewer').style.display = 'none'; }
+        
+        function openAdmin() { if(prompt("Chave:") === "netchaveapi") { document.getElementById('admin-panel').style.display = "block"; document.getElementById('admin-overlay').style.display = "block"; } }
+        function closeAdmin() { document.getElementById('admin-panel').style.display = "none"; document.getElementById('admin-overlay').style.display = "none"; }
+
+        function updatePrices() {
+            database.ref('precos').set({
+                social: document.getElementById('input-social').value,
+                degrade: document.getElementById('input-degrade').value
+            }).then(() => { alert("Atualizado!"); closeAdmin(); });
+        }
+
+        function openTab(evt, tabName) {
+            let sections = document.getElementsByClassName("content-section");
+            for (let s of sections) s.classList.remove("active");
+            let buttons = document.getElementsByClassName("tab-btn");
+            for (let b of buttons) b.classList.remove("active");
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+            if(tabName === 'galeria') loadGallery();
+        }
+
+        function loadGallery() {
+            const display = document.getElementById('gallery-display');
+            database.ref('usuarios/' + myId + '/fotos').on('value', (snapshot) => {
+                display.innerHTML = '';
+                snapshot.forEach((child) => {
+                    const photoId = child.key;
+                    const photoData = child.val();
+
+                    const container = document.createElement('div');
+                    container.className = 'photo-container';
+
+                    const img = document.createElement('img');
+                    img.src = photoData.image;
+                    img.onclick = () => openFullscreen(img.src);
+
+                    const delBtn = document.createElement('button');
+                    delBtn.className = 'delete-photo-btn';
+                    delBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
+                    delBtn.onclick = () => deletePhoto(photoId);
+
+                    container.appendChild(img);
+                    container.appendChild(delBtn);
+                    display.prepend(container);
+                });
+            });
+        }
+
+        function deletePhoto(id) {
+            if(confirm("Deseja excluir esta foto da sua nuvem?")) {
+                database.ref('usuarios/' + myId + '/fotos/' + id).remove();
+            }
+        }
+
+        document.getElementById('upload-input').onchange = function(e) {
+            const file = e.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                database.ref('usuarios/' + myId + '/fotos').push({ image: event.target.result });
+            };
+            reader.readAsDataURL(file);
+        };
+
+        database.ref('status_loja').on('value', (s) => {
+            const isA = s.val();
+            document.getElementById('shop-status').className = isA ? "status-panel status-aberto" : "status-panel status-fechado";
+            document.getElementById('status-label').innerText = isA ? "BARBEARIA RDG ABERTA" : "BARBEARIA RDG FECHADA";
+        });
+
+        database.ref('precos').on('value', (s) => {
+            const d = s.val();
+            if(d) {
+                document.getElementById('val-social').innerText = 'R$ ' + d.social;
+                document.getElementById('val-degrade').innerText = 'R$ ' + d.degrade;
+                document.getElementById('input-social').value = d.social;
+                document.getElementById('input-degrade').value = d.degrade;
+            }
+        });
+    </script>
+</body>
+</html>
