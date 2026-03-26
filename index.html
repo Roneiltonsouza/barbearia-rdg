@@ -29,7 +29,7 @@
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--dark-bg); color: white; overflow-x: hidden; padding-bottom: 120px; padding-top: 90px; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--dark-bg); color: white; overflow-x: hidden; padding-bottom: 60px; padding-top: 90px; }
 
         header { 
             display: flex; justify-content: space-between; align-items: center;
@@ -41,23 +41,13 @@
         }
 
         .header-logo-container { display: flex; flex-direction: column; align-items: flex-start; }
-
-        .logo-rdg { 
-            font-size: 1.6rem; font-weight: 900; font-style: italic; display: flex; align-items: center; gap: 8px; margin-bottom: 2px;
-            background: linear-gradient(180deg, #000000 0%, var(--vibrant-orange) 100%);
-            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
-        }
-
-        .logo-subtitle {
-            font-size: 0.7rem; font-weight: bold; letter-spacing: 1px;
-            background: linear-gradient(180deg, #000000 0%, var(--vibrant-orange) 100%);
-            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
-        }
-
+        .logo-rdg { font-size: 1.6rem; font-weight: 900; font-style: italic; display: flex; align-items: center; gap: 8px; margin-bottom: 2px; background: linear-gradient(180deg, #000000 0%, var(--vibrant-orange) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .logo-subtitle { font-size: 0.7rem; font-weight: bold; letter-spacing: 1px; background: linear-gradient(180deg, #000000 0%, var(--vibrant-orange) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
         .dev-gear { color: #fff; cursor: pointer; font-size: 1.1rem; opacity: 0.7; transition: 0.3s; }
-        .dev-gear:hover { color: var(--vibrant-orange); opacity: 1; }
 
-        .header-profile-img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid #fff; cursor: pointer; object-fit: cover; }
+        .pix-btn-wrapper { display: flex; flex-direction: column; align-items: center; }
+        .pix-tag { color: var(--led-green); font-size: 0.55rem; font-weight: 900; text-transform: uppercase; margin-bottom: 2px; }
+        .header-profile-img { width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--vibrant-orange); cursor: pointer; object-fit: cover; box-shadow: 0 0 12px rgba(255, 69, 0, 0.5); }
 
         .status-panel { display: flex; flex-direction: column; align-items: center; background: rgba(0,0,0,0.8); padding: 8px 12px; border-radius: 12px; border: 1px solid #444; min-width: 140px; }
         .status-text { font-size: 0.6rem; font-weight: 900; margin-bottom: 4px; text-align: center; }
@@ -70,9 +60,17 @@
         .tab-btn { flex: 1; padding: 18px; border: none; background: none; color: #bbb; font-weight: bold; font-size: 0.8rem; cursor: pointer; text-transform: uppercase; transition: color 0.3s; text-shadow: 1px 1px 2px black; }
         .tab-btn.active { color: #fff; border-bottom: 3px solid #fff; }
 
-        .whatsapp-fixed { position: fixed; bottom: 30px; right: 20px; background-color: var(--whatsapp); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 9999; text-decoration: none; }
+        .whatsapp-header-btn {
+            display: flex; align-items: center; justify-content: center;
+            background: var(--whatsapp); color: white; padding: 10px 20px;
+            margin: 15px auto 5px auto; border-radius: 30px;
+            text-decoration: none; font-weight: bold; font-size: 0.9rem;
+            width: fit-content; box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            transition: 0.3s;
+        }
+        .whatsapp-header-btn i { font-size: 1.2rem; margin-right: 8px; }
 
-        .main-logo-container { width: 100%; display: flex; justify-content: center; padding: 25px 0 10px 0; position: relative; z-index: 5; }
+        .main-logo-container { width: 100%; display: flex; justify-content: center; padding: 10px 0; position: relative; z-index: 5; }
         .main-logo-img { max-width: 180px; height: auto; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.8)); }
 
         .content-section { display: none; padding: 10px 20px; animation: fadeIn 0.3s; position: relative; z-index: 5; }
@@ -87,7 +85,12 @@
         .btn-update { width:100%; padding:15px; background:#fff; color:#000; border:none; border-radius:10px; font-weight:bold; cursor:pointer; margin-bottom: 10px; text-transform: uppercase; }
         .btn-remove-aba { background: #e74c3c; color: white; border: none; padding: 10px; border-radius: 8px; margin-left: 5px; cursor: pointer; }
 
+        #pix-modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:20000; flex-direction:column; align-items:center; justify-content:center; backdrop-filter:blur(10px); color:white; padding: 20px; text-align:center; }
+        .pix-box { background: #1a1a1a; padding: 25px; border-radius: 15px; border: 1px solid var(--vibrant-orange); max-width: 90%; width: 350px; }
+        .btn-pix { width:100%; padding:15px; border:none; border-radius:10px; font-weight:bold; cursor:pointer; text-transform:uppercase; margin-top:10px; }
+
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes pulse-led { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
     </style>
 </head>
 <body>
@@ -98,17 +101,35 @@
     <div id="admin-panel">
         <h3 style="margin:0 0 20px 0; color:#fff; text-align:center; text-transform:uppercase;">Painel RDG</h3>
         <button id="toggle-shop-btn" onclick="toggleShopStatus()" class="btn-update">Carregando...</button>
-        
-        <p style="font-size: 0.7rem; color: var(--vibrant-orange); margin: 5px 0;">PAPEL DE PAREDE (LINK):</p>
-        <input type="text" id="input-bg-link" class="admin-input" placeholder="Link da imagem">
-        
-        <hr style="border:0; border-top:1px solid #444; margin:15px 0;">
         <p style="font-size: 0.7rem; color: var(--vibrant-orange); margin: 5px 0;">GERENCIAR SERVIÇOS:</p>
         <div id="admin-servicos-container"></div>
-        
-        <button onclick="addNovoServico()" style="width:100%; background:#444; color:#fff; border:none; padding:12px; border-radius:10px; margin-top:10px; cursor:pointer;">+ ADICIONAR NOVO SERVIÇO</button>
-        <button class="btn-update" onclick="updateAllData()" style="margin-top:15px;">SALVAR TUDO</button>
+        <button onclick="addNovoServico()" style="width:100%; background:#444; color:#fff; border:none; padding:12px; border-radius:10px; margin-top:10px; cursor:pointer;">+ NOVO SERVIÇO</button>
+        <hr style="border:0; border-top:1px solid #444; margin:15px 0;">
+        <p style="font-size: 0.7rem; color: var(--vibrant-orange); margin: 5px 0;">GERENCIAR SITES:</p>
+        <div id="admin-sites-container"></div>
+        <button onclick="addNovoSite()" style="width:100%; background:#444; color:#fff; border:none; padding:12px; border-radius:10px; margin-top:10px; cursor:pointer;">+ NOVO SITE</button>
+        <p style="font-size: 0.7rem; color: var(--vibrant-orange); margin: 15px 0 5px 0;">PAPEL DE PAREDE (LINK):</p>
+        <input type="text" id="input-bg-link" class="admin-input" placeholder="Link da imagem">
+        <button class="btn-update" onclick="updateAllData()" style="margin-top:15px; background: var(--led-green);">SALVAR TUDO</button>
         <button onclick="closeAdmin()" style="width:100%; padding:10px; background:none; color:#888; border:none; margin-top:10px;">[ Sair ]</button>
+    </div>
+
+    <div id="pix-modal">
+        <div class="pix-box">
+            <h3 style="color:var(--vibrant-orange); margin-top:0;">PIX RDG</h3>
+            <img src="https://i.ibb.co/TDmBnbPp/IMG-20260217-112841.png" style="width:150px; border-radius:10px; margin-bottom:10px; cursor:pointer;" onclick="openFullscreenImg(this.src)">
+            <div id="form-valor">
+                <input type="number" id="valor-pix" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #444; background: #000; color: #fff; text-align: center; font-size: 1.2rem; font-weight: bold; margin: 10px 0;" placeholder="R$ 0,00" step="0.01">
+                <button class="btn-pix" style="background:var(--vibrant-orange); color:white;" onclick="gerarPixDinamico()">GERAR CÓDIGO</button>
+            </div>
+            <div id="area-codigo" style="display:none;">
+                <p style="font-size:0.9rem;">Valor: <b id="display-valor" style="color:var(--led-green);"></b></p>
+                <div id="pix-code" style="background:#000; color:var(--led-green); padding:10px; border-radius:8px; font-size:0.7rem; word-break:break-all; margin:15px 0; border:1px dashed #444;"></div>
+                <button class="btn-pix" style="background:var(--led-green); color:black;" onclick="copiarPix()">COPIAR PIX</button>
+                <button class="btn-pix" style="background:transparent; color:#888; border:1px solid #444;" onclick="resetPagamento()">VOLTAR</button>
+            </div>
+            <button class="btn-pix" style="background:transparent; color:#888; margin-top:20px;" onclick="fecharPagamento()">[ Fechar ]</button>
+        </div>
     </div>
 
     <header>
@@ -120,17 +141,21 @@
             <span class="status-text" id="status-label">CARREGANDO...</span>
             <div class="led"></div>
         </div>
-        <img src="https://i.ibb.co/HpPNnqqc/97a8aeeeeff0f0cffea0265f5fcfe2f41ac511f755c6b0d03d884867738a6947.jpg" class="header-profile-img" onclick="openFullscreenImg(this.src)">
+        <div class="pix-btn-wrapper">
+            <span class="pix-tag">Pague com Pix</span>
+            <img src="https://i.ibb.co/TDmBnbPp/IMG-20260217-112841.png" class="header-profile-img" onclick="abrirPagamento()">
+        </div>
     </header>
-
-    <a href="https://api.whatsapp.com/send?phone=5588988088578&text=Olá%20RDG" class="whatsapp-fixed" target="_blank">
-        <i class="fab fa-whatsapp"></i>
-    </a>
 
     <nav class="tabs">
         <button class="tab-btn active" onclick="openTab(event, 'precos')">TABELA</button>
-        <button class="tab-btn" onclick="openTab(event, 'galeria')">MINHA NUVEM</button>
+        <button class="tab-btn" onclick="openTab(event, 'galeria')">NUVEM</button>
+        <button class="tab-btn" onclick="openTab(event, 'sites')">SITES</button>
     </nav>
+
+    <a href="https://api.whatsapp.com/send?phone=5588988088578&text=Olá%20RDG" class="whatsapp-header-btn" target="_blank">
+        <i class="fab fa-whatsapp"></i> Falar no WhatsApp
+    </a>
 
     <div class="main-logo-container">
         <img src="https://i.supaimg.com/6ce5a4d0-a717-4695-8947-6df309d71c4a/93281898-889c-402e-b747-4bb5c11bdc20.png" class="main-logo-img">
@@ -139,90 +164,112 @@
     <section id="precos" class="content-section active"></section>
 
     <section id="galeria" class="content-section">
-        <p style="text-align: center; font-size: 0.7rem; color: #888; margin-bottom: 15px;">Suas fotos são privadas e só você pode vê-las.</p>
         <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-            <button onclick="document.getElementById('upload-input').click()" style="flex: 1; background: #fff; color: #000; border: none; padding: 15px; border-radius: 10px; font-weight: bold;"><i class="fas fa-file-upload"></i> GALERIA</button>
-            <button onclick="document.getElementById('camera-input').click()" style="flex: 1; background: var(--vibrant-orange); color: #fff; border: none; padding: 15px; border-radius: 10px; font-weight: bold;"><i class="fas fa-camera"></i> CÂMERA</button>
+            <button onclick="document.getElementById('upload-input').click()" style="flex: 1; background: #fff; color: #000; border: none; padding: 15px; border-radius: 10px; font-weight: bold;">GALERIA</button>
+            <button onclick="document.getElementById('camera-input').click()" style="flex: 1; background: var(--vibrant-orange); color: #fff; border: none; padding: 15px; border-radius: 10px; font-weight: bold;">CÂMERA</button>
         </div>
         <div id="gallery-display" style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"></div>
         <input type="file" id="upload-input" style="display:none"><input type="file" id="camera-input" capture="environment" style="display:none">
+    </section>
+
+    <section id="sites" class="content-section">
+        <div id="sites-display"></div>
     </section>
 
     <script>
         const firebaseConfig = { apiKey: "AIzak4N87EPBGvSByz6amrylTnV0wzbZ8CfZAlj", databaseURL: "https://netbase-cloud-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
-
-        // ID ÚNICO PRIVADO POR CLIENTE
         const myId = localStorage.getItem('rdg_client_id') || ('c' + Math.random().toString(36).substr(2, 9));
         localStorage.setItem('rdg_client_id', myId);
-        
-        let localServicos = [];
-        let shopStatus = false;
 
+        let localServicos = [], localSites = [], shopStatus = false;
+
+        function abrirPagamento() { document.getElementById('pix-modal').style.display = 'flex'; resetPagamento(); }
+        function fecharPagamento() { document.getElementById('pix-modal').style.display = 'none'; }
+        function resetPagamento() { document.getElementById('form-valor').style.display = 'block'; document.getElementById('area-codigo').style.display = 'none'; }
+        
+        function gerarPixDinamico() {
+            const vInput = document.getElementById('valor-pix').value;
+            if(!vInput || vInput <= 0) return alert("Digite um valor!");
+            const valor = parseFloat(vInput).toFixed(2);
+            const chave = "roneiltonsouzadasilva@gmail.com"; 
+            let payload = "00020126";
+            const m = "0014br.gov.bcb.pix01" + chave.length.toString().padStart(2, '0') + chave;
+            payload += m.length.toString().padStart(2, '0') + m + "52040000530398654" + valor.length.toString().padStart(2, '0') + valor + "5802BR5908RDG_BARB6009FORTALEZA62070503***6304";
+            const finalPix = payload + calcCRC16(payload);
+            document.getElementById('display-valor').innerText = "R$ " + valor.replace('.',',');
+            document.getElementById('pix-code').innerText = finalPix;
+            document.getElementById('form-valor').style.display = 'none';
+            document.getElementById('area-codigo').style.display = 'block';
+        }
+
+        function calcCRC16(str) {
+            let crc = 0xFFFF;
+            for (let i = 0; i < str.length; i++) {
+                crc ^= str.charCodeAt(i) << 8;
+                for (let j = 0; j < 8; j++) {
+                    if ((crc & 0x8000) !== 0) crc = (crc << 1) ^ 0x1021;
+                    else crc <<= 1;
+                }
+            }
+            return (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
+        }
+
+        function copiarPix() { const code = document.getElementById('pix-code').innerText; navigator.clipboard.writeText(code).then(() => alert("Copiado!")); }
         function openAdmin() { if(prompt("Chave Admin:") === "netchaveapi") { document.getElementById('admin-panel').style.display = "block"; document.getElementById('admin-overlay').style.display = "block"; } }
         function closeAdmin() { document.getElementById('admin-panel').style.display = "none"; document.getElementById('admin-overlay').style.display = "none"; }
+        function toggleShopStatus() { database.ref('rdg_v2026_data/aberto').set(!shopStatus); }
 
-        // SINCRONIZAÇÃO GERAL (TABELA E STATUS)
-        database.ref('rdg_v2026_data').on('value', snapshot => {
-            const data = snapshot.val() || {};
+        database.ref('rdg_v2026_data').on('value', snap => {
+            const data = snap.val() || {};
             shopStatus = data.aberto;
-            if(data.bg) {
-                document.getElementById('bg-dinamico').style.backgroundImage = `url('${data.bg}')`;
-                document.getElementById('input-bg-link').value = data.bg;
-            }
-            const btn = document.getElementById('toggle-shop-btn'), panel = document.getElementById('shop-status'), label = document.getElementById('status-label');
-            if(shopStatus) {
-                panel.className = "status-panel status-aberto"; label.innerText = "BARBEARIA RDG ABERTA";
-                btn.innerText = "FECHAR BARBEARIA"; btn.style.background = "#e74c3c"; btn.style.color = "#fff";
-            } else {
-                panel.className = "status-panel status-fechado"; label.innerText = "BARBEARIA RDG FECHADA";
-                btn.innerText = "ABRIR BARBEARIA"; btn.style.background = "#2ecc71"; btn.style.color = "#000";
-            }
-            localServicos = data.servicos ? Object.values(data.servicos) : [];
-            renderTabela();
+            if(data.bg) document.getElementById('bg-dinamico').style.backgroundImage = `url('${data.bg}')`;
+            if(document.getElementById('input-bg-link')) document.getElementById('input-bg-link').value = data.bg || "";
+            
+            document.getElementById('status-label').innerText = shopStatus ? "BARBEARIA RDG ABERTA" : "BARBEARIA RDG FECHADA";
+            document.getElementById('shop-status').className = shopStatus ? "status-panel status-aberto" : "status-panel status-fechado";
+            document.getElementById('toggle-shop-btn').innerText = shopStatus ? "FECHAR BARBEARIA" : "ABRIR BARBEARIA";
+            document.getElementById('toggle-shop-btn').style.background = shopStatus ? "#e74c3c" : "#2ecc71";
+
+            localServicos = data.servicos ? (Array.isArray(data.servicos) ? data.servicos : Object.values(data.servicos)) : [];
+            const pSec = document.getElementById('precos'); pSec.innerHTML = "";
+            localServicos.forEach(s => { pSec.innerHTML += `<div class="price-card"><div><strong>${s.n}</strong></div><div class="price-value">${s.p}</div></div>`; });
+
+            localSites = data.sites ? (Array.isArray(data.sites) ? data.sites : Object.values(data.sites)) : [];
+            const sSec = document.getElementById('sites-display'); sSec.innerHTML = "";
+            localSites.forEach(s => { sSec.innerHTML += `<a href="${s.link}" target="_blank" style="text-decoration:none;"><div class="price-card"><div><img src="${s.foto}" style="width:30px;height:30px;border-radius:50%;vertical-align:middle;margin-right:10px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1006/1006771.png'"><strong>${s.nome}</strong></div><i class="fas fa-external-link-alt" style="opacity:0.5;"></i></div></a>`; });
+            
             renderAdmin();
         });
 
-        function renderTabela() {
-            const container = document.getElementById('precos');
-            container.innerHTML = "";
-            localServicos.forEach(s => {
-                container.innerHTML += `<div class="price-card"><div><strong>${s.n}</strong></div><div class="price-value">${s.p}</div></div>`;
-            });
-        }
-
         function renderAdmin() {
-            const container = document.getElementById('admin-servicos-container');
-            container.innerHTML = "";
-            localServicos.forEach((s, index) => {
-                container.innerHTML += `
-                    <div style="display:flex; gap:5px; margin-bottom:8px; align-items:center;">
-                        <input type="text" class="admin-input" style="width:50%; margin-bottom:0;" value="${s.n}" onchange="localServicos[${index}].n = this.value">
-                        <input type="text" class="admin-input" style="width:30%; margin-bottom:0;" value="${s.p}" onchange="localServicos[${index}].p = this.value">
-                        <button class="btn-remove-aba" onclick="removerServico(${index})"><i class="fas fa-trash"></i></button>
-                    </div>`;
-            });
+            const sc = document.getElementById('admin-servicos-container'); sc.innerHTML = "";
+            localServicos.forEach((s, i) => { sc.innerHTML += `<div style="display:flex; gap:5px; margin-bottom:8px;"><input class="admin-input" style="width:50%;" value="${s.n}" oninput="localServicos[${i}].n=this.value"><input class="admin-input" style="width:30%;" value="${s.p}" oninput="localServicos[${i}].p=this.value"><button class="btn-remove-aba" onclick="localServicos.splice(${i},1);renderAdmin()">X</button></div>`; });
+            const stc = document.getElementById('admin-sites-container'); stc.innerHTML = "";
+            localSites.forEach((s, i) => { stc.innerHTML += `<div style="background:#111; padding:10px; border-radius:8px; margin-bottom:10px;"><input class="admin-input" placeholder="Nome" value="${s.nome}" oninput="localSites[${i}].nome=this.value"><input class="admin-input" placeholder="Link" value="${s.link}" oninput="localSites[${i}].link=this.value"><input class="admin-input" placeholder="Foto" value="${s.foto}" oninput="localSites[${i}].foto=this.value"><button class="btn-remove-aba" style="width:100%;" onclick="localSites.splice(${i},1);renderAdmin()">Remover</button></div>`; });
         }
 
-        function addNovoServico() {
-            localServicos.push({ n: "Novo", p: "R$ 00" });
-            renderAdmin();
-        }
+        function addNovoServico() { localServicos.push({n:"Novo", p:"R$ 00"}); renderAdmin(); }
+        function addNovoSite() { localSites.push({nome:"Novo Site", link:"https://", foto:""}); renderAdmin(); }
+        
+        function updateAllData() { 
+            const cleanServicos = {}; 
+            localServicos.forEach((s, i) => { if(s.n) cleanServicos[i] = {n: s.n, p: s.p}; });
+            
+            const cleanSites = {}; 
+            localSites.forEach((s, i) => { if(s.nome) cleanSites[i] = {nome: s.nome, link: s.link, foto: s.foto}; });
 
-        function removerServico(i) {
-            localServicos.splice(i, 1);
-            renderAdmin();
+            database.ref('rdg_v2026_data').set({
+                aberto: shopStatus,
+                bg: document.getElementById('input-bg-link').value, 
+                servicos: cleanServicos, 
+                sites: cleanSites
+            }).then(() => { 
+                alert("Salvo!"); 
+                closeAdmin(); 
+            }).catch(e => alert("Erro ao salvar: " + e.message)); 
         }
-
-        function updateAllData() {
-            database.ref('rdg_v2026_data').update({
-                bg: document.getElementById('input-bg-link').value,
-                servicos: localServicos
-            }).then(() => { alert("RDG Atualizado!"); closeAdmin(); });
-        }
-
-        function toggleShopStatus() { database.ref('rdg_v2026_data/aberto').set(!shopStatus); }
 
         function openTab(evt, tabName) {
             document.querySelectorAll(".content-section").forEach(s => s.classList.remove("active"));
@@ -232,15 +279,14 @@
             if(tabName === 'galeria') loadGallery();
         }
 
-        // LÓGICA DA NUVEM PRIVADA: SÓ PUXA FOTOS DO 'myId' DO CLIENTE ATUAL
         function loadGallery() {
-            database.ref('nuvem_privada/' + myId).on('value', snapshot => {
-                const display = document.getElementById('gallery-display'); display.innerHTML = '';
-                snapshot.forEach(child => {
-                    const img = document.createElement('img'); img.src = child.val().image;
-                    img.style = "width:100%; aspect-ratio:1; object-fit:cover; border-radius:8px; border: 1px solid #333;";
-                    img.onclick = () => openFullscreenImg(child.val().image, child.key);
-                    display.prepend(img);
+            database.ref('nuvem_privada/' + myId).on('value', snap => {
+                const disp = document.getElementById('gallery-display'); disp.innerHTML = '';
+                snap.forEach(c => {
+                    const img = document.createElement('img'); img.src = c.val().image;
+                    img.style = "width:100%; aspect-ratio:1; object-fit:cover; border-radius:8px; border:1px solid #333;";
+                    img.onclick = () => openFullscreenImg(img.src, c.key);
+                    disp.prepend(img);
                 });
             });
         }
@@ -257,15 +303,13 @@
 
         function openFullscreenImg(src, fotoId = null) { 
             const viewer = document.createElement('div');
-            viewer.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:10000; display:flex; flex-direction:column; align-items:center; justify-content:center; backdrop-filter:blur(10px);";
+            viewer.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:30000; display:flex; flex-direction:column; align-items:center; justify-content:center; backdrop-filter:blur(10px);";
             if(fotoId) {
-                const del = document.createElement('button');
-                del.innerHTML = '<i class="fas fa-trash"></i> APAGAR MINHA FOTO';
-                del.style = "margin-bottom:20px; background:var(--led-red); color:white; border:none; padding:10px 20px; border-radius:20px; font-weight:bold;";
-                del.onclick = (e) => { e.stopPropagation(); if(confirm("Deseja apagar sua foto da nuvem?")) { database.ref('nuvem_privada/' + myId + '/' + fotoId).remove(); viewer.remove(); } };
+                const del = document.createElement('button'); del.innerHTML = 'APAGAR FOTO'; del.style = "margin-bottom:20px; background:red; color:white; border:none; padding:10px; border-radius:10px;";
+                del.onclick = (e) => { e.stopPropagation(); if(confirm("Apagar?")) { database.ref('nuvem_privada/' + myId + '/' + fotoId).remove(); viewer.remove(); } };
                 viewer.appendChild(del);
             }
-            const img = document.createElement('img'); img.src = src; img.style = "max-width:90%; max-height:80%; border-radius:10px; box-shadow: 0 0 20px rgba(0,0,0,1);";
+            const img = document.createElement('img'); img.src = src; img.style = "max-width:90%; max-height:80%; border-radius:10px;";
             viewer.onclick = () => viewer.remove(); viewer.appendChild(img); document.body.appendChild(viewer);
         }
     </script>
